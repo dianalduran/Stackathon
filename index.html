@@ -6,55 +6,69 @@
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <script src="three.js"></script>
-    <script>
-      function main() {
-        // renderer
-        const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
-        // camera
-        const fov = 55;
-        const aspect = window.innerWidth / window.innerHeight;
-        const near = 0.1;
-        const far = 1000;
-        const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-        camera.position.set(0, 0, -100);
-        camera.position.z = 30;
-        // scene
-        const scene = new THREE.Scene();
-        // shape
-        const geometry = new THREE.TorusKnotGeometry(8.0, 1.0, 30, 17, 1, 19);
-        const material = new THREE.MeshPhongMaterial({ color: 0xffff00 });
-        const torusKnot = new THREE.Mesh(geometry, material);
-        //light
-        const color = 0xffffff;
-        const intensity = 1;
-        const light = new THREE.DirectionalLight(color, intensity);
-        light.position.set(-1, 2, 4);
-
-        scene.add(torusKnot);
-        scene.add(light);
-
-        function animate() {
-          torusKnot.rotation.x += 0.01;
-          torusKnot.rotation.y += 0.01;
-
-          renderer.render(scene, camera);
-          requestAnimationFrame(animate);
-        }
-        requestAnimationFrame(animate);
-
-        // responsive design
-        function resize() {
-          camera.aspect = window.innerWidth / window.innerHeight;
-          camera.updateProjectionMatrix();
-          renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-        window.addEventListener("resize", resize, false);
-      }
-      main();
-    </script>
-    <div id="canvas">Canvas</div>
+    <!-- <div id="canvas">Canvas</div> -->
   </body>
+  <script src="three.js"></script>
+  <script>
+    function main() {
+      // renderer
+      const renderer = new THREE.WebGLRenderer();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+      // camera
+      const fov = 50;
+      const aspect = window.innerWidth / window.innerHeight;
+      const near = 0.1;
+      const far = 1000;
+      const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+      camera.position.set(0, 0, 35);
+      // camera.position.z = 30;
+      // camera.lookAt(0, 0, 0);
+      // scene
+      const scene = new THREE.Scene();
+
+      // shape
+      const geometry = new THREE.TorusKnotGeometry(8.0, 1.0, 30, 17, 1, 19);
+      const material = new THREE.MeshPhongMaterial({
+        color: 0xffd300,
+        shininess: 100,
+      });
+      const torusKnot = new THREE.Mesh(geometry, material);
+      //light
+      const color = 0xffffff;
+      const intensity = 1;
+      const light = new THREE.DirectionalLight(color, intensity);
+      light.position.set(-1, 2, 4);
+
+      scene.add(torusKnot);
+      scene.add(light);
+
+      //helpers
+      const axes = new THREE.AxesHelper();
+      // axes.material.depthTest = true;
+      // axes.renderOrder = 1;
+      torusKnot.add(axes);
+
+      const cameraHelper = new THREE.CameraHelper(camera);
+      scene.add(cameraHelper);
+
+      function animate() {
+        // torusKnot.rotation.x += 0.01;
+        torusKnot.rotation.y += 0.01;
+
+        renderer.render(scene, camera);
+        requestAnimationFrame(animate);
+      }
+      requestAnimationFrame(animate);
+
+      // responsive design
+      function resize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      }
+      window.addEventListener("resize", resize, false);
+    }
+    main();
+  </script>
 </html>
