@@ -8,37 +8,53 @@
   <body>
     <script src="three.js"></script>
     <script>
-      //set up includes scene, camera and renderer
-      const scene = new THREE.Scene();
+      function main() {
+        // renderer
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+        // camera
+        const fov = 55;
+        const aspect = window.innerWidth / window.innerHeight;
+        const near = 0.1;
+        const far = 1000;
+        const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+        camera.position.set(0, 0, -100);
+        camera.position.z = 30;
+        // scene
+        const scene = new THREE.Scene();
+        // shape
+        const geometry = new THREE.TorusKnotGeometry(8.0, 1.0, 30, 17, 1, 19);
+        const material = new THREE.MeshPhongMaterial({ color: 0xffff00 });
+        const torusKnot = new THREE.Mesh(geometry, material);
+        //light
+        const color = 0xffffff;
+        const intensity = 1;
+        const light = new THREE.DirectionalLight(color, intensity);
+        light.position.set(-1, 2, 4);
 
-      // the parameters for PerspectiveCamera include FOV in degrees, aspect ratio width/height, near and far clipping plane
-      const camera = new THREE.PerspectiveCamera(
-        55,
-        window.innerWidth / window.innerHeight,
-        0.1,
-        1000
-      );
-      //   camera.position.set(0, 0, -100);
+        scene.add(torusKnot);
+        scene.add(light);
 
-      const renderer = new THREE.WebGLRenderer();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      document.body.appendChild(renderer.domElement);
+        function animate() {
+          torusKnot.rotation.x += 0.01;
+          torusKnot.rotation.y += 0.01;
 
-      const geometry = new THREE.TorusKnotGeometry(8.0, 1.0, 30, 17, 1, 19);
-      const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-      const torusKnot = new THREE.Mesh(geometry, material);
-      scene.add(torusKnot);
-
-      camera.position.z = 5;
-
-      function animate() {
+          renderer.render(scene, camera);
+          requestAnimationFrame(animate);
+        }
         requestAnimationFrame(animate);
-        torusKnot.rotation.x += 0.01;
-        torusKnot.rotation.y += 0.01;
-        renderer.render(scene, camera);
+
+        // responsive design
+        function resize() {
+          camera.aspect = window.innerWidth / window.innerHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        window.addEventListener("resize", resize, false);
       }
-      animate();
+      main();
     </script>
-    <div id="test">Test</div>
+    <div id="canvas">Canvas</div>
   </body>
 </html>
