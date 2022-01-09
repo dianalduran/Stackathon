@@ -13,7 +13,7 @@ function init() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.getElementById("canvas").appendChild(renderer.domElement);
 
-  const crown = getShape();
+  const crown = getCrown();
   crown.name = "crown";
   const sphere = getSphere();
 
@@ -49,9 +49,8 @@ function init() {
 }
 init();
 
-// shape
-function getShape() {
-  const geometry = new THREE.TorusKnotGeometry(8.0, 1.0, 30, 17, 1, 19);
+function getCrown() {
+  const geometry = new THREE.TorusKnotGeometry(9.0, 1.0, 30, 20, 1, 19);
   const material = new THREE.MeshPhongMaterial({
     color: 0xffd300,
     shininess: 100,
