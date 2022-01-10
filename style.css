@@ -4,6 +4,17 @@ body,
   height: 100%;
 }
 
+button {
+  background-color: transparent;
+  color: white;
+  border-color: #ffd300;
+  border-radius: 50%;
+  width: 50px;
+  /* padding: 15px; */
+  font-size: 40px;
+  /* line-height: 1.5em; */
+}
+
 #left {
   position: absolute;
   top: 50%;
@@ -17,15 +28,14 @@ body,
   right: 5%;
 }
 
-button {
-  background-color: transparent;
-  color: white;
-  border-color: #ffd300;
-  border-radius: 50%;
-  width: 50px;
-  /* padding: 15px; */
-  font-size: 40px;
-  /* line-height: 1.5em; */
+#animate {
+  position: absolute;
+  bottom: 5%;
+  left: 40%;
+  width: fit-content;
+  border-color: green;
+  border-radius: 15px;
+  background-color: green;
 }
 
 #canvas {
