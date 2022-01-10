@@ -17,7 +17,6 @@ function init() {
   crown.name = "crown";
   const sphere = getSphere();
 
-  //light
   const color = 0xffffff;
   const intensity = 1;
   const light = new THREE.HemisphereLight(color, intensity);
@@ -26,17 +25,31 @@ function init() {
 
   scene.add(crown);
   scene.add(light);
+  renderer.render(scene, camera);
 
   //helpers
-  const axes = new THREE.AxesHelper();
+  //   const axes = new THREE.AxesHelper();
   // axes.material.depthTest = true;
   // axes.renderOrder = 1;
-  crown.add(axes);
+  //   crown.add(axes);
 
   //   const cameraHelper = new THREE.CameraHelper(camera);
   //   scene.add(cameraHelper);
 
-  animate(renderer, scene, camera);
+  const leftButton = document.getElementById("left");
+  const rightButton = document.getElementById("right");
+
+  let direction;
+  leftButton.addEventListener("click", function () {
+    let clock = new THREE.Clock();
+    direction = "left";
+    animate(renderer, scene, camera, clock, direction);
+  });
+  rightButton.addEventListener("click", function () {
+    let clock = new THREE.Clock();
+    direction = "right";
+    animate(renderer, scene, camera, clock, direction);
+  });
 
   // responsive design
   function resize() {
@@ -69,12 +82,20 @@ function getSphere() {
   return sphere;
 }
 
-function animate(renderer, scene, camera) {
-  const crown = scene.getObjectByName("crown");
-  crown.rotation.z += 0.01;
-
+function animate(renderer, scene, camera, clock, direction) {
   renderer.render(scene, camera);
+  let timeElapsed = clock.getElapsedTime();
+
+  const crown = scene.getObjectByName("crown");
+
+  if (timeElapsed < 2 && direction === "left") {
+    crown.rotation.z += 0.1;
+  }
+
+  if (timeElapsed < 2 && direction === "right") {
+    crown.rotation.z -= 0.1;
+  }
   requestAnimationFrame(function () {
-    animate(renderer, scene, camera);
+    animate(renderer, scene, camera, clock, direction);
   });
 }
