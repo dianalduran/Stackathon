@@ -1,4 +1,5 @@
-console.log(THREE);
+init();
+
 function init() {
   const scene = new THREE.Scene();
 
@@ -13,19 +14,23 @@ function init() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.getElementById("canvas").appendChild(renderer.domElement);
 
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  animate(renderer, scene, camera, controls);
+
   const crown = getCrown();
   crown.name = "crown";
-  const sphere = getSphere();
 
   const color = 0xffffff;
   const intensity = 1;
   const light = new THREE.HemisphereLight(color, intensity);
   light.position.set(-200, -400, -650);
-  light.add(sphere);
+  //sphere added to light for light visibility
+  //   const sphere = getSphere();
+  //   light.add(sphere);
 
   scene.add(crown);
   scene.add(light);
-  renderer.render(scene, camera);
+  //   renderer.render(scene, camera);
 
   //helpers
   //   const axes = new THREE.AxesHelper();
@@ -43,12 +48,12 @@ function init() {
   leftButton.addEventListener("click", function () {
     let clock = new THREE.Clock();
     direction = "left";
-    animate(renderer, scene, camera, clock, direction);
+    animate(renderer, scene, camera, controls, clock, direction);
   });
   rightButton.addEventListener("click", function () {
     let clock = new THREE.Clock();
     direction = "right";
-    animate(renderer, scene, camera, clock, direction);
+    animate(renderer, scene, camera, controls, clock, direction);
   });
 
   // responsive design
@@ -60,7 +65,6 @@ function init() {
 
   window.addEventListener("resize", resize, false);
 }
-init();
 
 function getCrown() {
   const geometry = new THREE.TorusKnotGeometry(9.0, 1.0, 30, 20, 1, 19);
@@ -73,29 +77,33 @@ function getCrown() {
   return torusKnot;
 }
 
-function getSphere() {
-  const geometry = new THREE.SphereGeometry(0.15, 24, 24);
-  const material = new THREE.MeshBasicMaterial({
-    color: 0xffffff,
-  });
-  const sphere = new THREE.Mesh(geometry, material);
-  return sphere;
-}
+// function getSphere() {
+//   const geometry = new THREE.SphereGeometry(0.15, 24, 24);
+//   const material = new THREE.MeshBasicMaterial({
+//     color: 0xffffff,
+//   });
+//   const sphere = new THREE.Mesh(geometry, material);
+//   return sphere;
+// }
 
-function animate(renderer, scene, camera, clock, direction) {
-  renderer.render(scene, camera);
-  let timeElapsed = clock.getElapsedTime();
+function animate(renderer, scene, camera, controls, clock, direction) {
+  if (clock) {
+    let timeElapsed = clock.getElapsedTime();
+    const crown = scene.getObjectByName("crown");
 
-  const crown = scene.getObjectByName("crown");
+    if (timeElapsed < 10 && direction === "left") {
+      crown.rotation.z += 0.1;
+    }
 
-  if (timeElapsed < 2 && direction === "left") {
-    crown.rotation.z += 0.1;
+    if (timeElapsed < 10 && direction === "right") {
+      crown.rotation.z -= 0.1;
+    }
+  } else {
+    renderer.render(scene, camera);
+    controls.update();
   }
 
-  if (timeElapsed < 2 && direction === "right") {
-    crown.rotation.z -= 0.1;
-  }
   requestAnimationFrame(function () {
-    animate(renderer, scene, camera, clock, direction);
+    animate(renderer, scene, camera, controls, clock, direction);
   });
 }
